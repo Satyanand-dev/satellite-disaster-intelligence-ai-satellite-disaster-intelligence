@@ -1,0 +1,53 @@
+# ------- OS / editor -------
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+*.iml
+
+# ------- Node / frontend -------
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+*.local
+
+# ------- Python / backend -------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# ------- Virtual environments -------
+.venv/
+venv/
+env/
+
+# ------- Secrets (never commit) -------
+.env
+.env.*
+!.env.example
+
+# ------- Runtime data: uploads/results/logs -------
+data/uploads/
+data/results/
+data/cache/
+*.log
+logs/
+
+# ------- Model weights (download or train, do not commit) -------
+data/models/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.torchscript
+
+# ------- note: data/samples/ IS committed (demo GeoJSON + demo rasters) -------
