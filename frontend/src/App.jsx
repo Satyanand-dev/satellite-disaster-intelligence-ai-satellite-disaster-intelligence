@@ -1,8 +1,12 @@
-import UiKit from './pages/UiKit.jsx'
+import { BrowserRouter } from 'react-router-dom'
+import { Toasts } from './components/ui/index.js'
+import AppRoutes from './routes.jsx'
 
-/**
- * Temporary root — F3 replaces this with the router + AppShell.
- */
 export default function App() {
-  return <UiKit />
+  return (
+    <BrowserRouter>
+      <Toasts />
+      <AppRoutes />
+    </BrowserRouter>
+  )
 }
