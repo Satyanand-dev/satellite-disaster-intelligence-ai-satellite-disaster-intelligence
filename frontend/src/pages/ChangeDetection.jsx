@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom'
 import DataConfidence from '../components/data/DataConfidence.jsx'
-import MapPlaceholder from '../components/map/MapPlaceholder.jsx'
+import MapView from '../components/map/MapView.jsx'
 import { toast } from '../components/ui/toast.js'
-import { CHANGE_POLYGONS, DEMO_EVENT, MAP_SHAPES } from '../utils/mockData.js'
+import { CHANGE_POLYGONS, DEMO_EVENT } from '../utils/mockData.js'
 
 export default function ChangeDetection() {
   const { eventId } = useParams()
@@ -24,19 +24,9 @@ export default function ChangeDetection() {
       </header>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Frame title="Before" subtitle={e.preDate}>
-          <path d={MAP_SHAPES.river} stroke="#1E4E6B" strokeWidth="10" fill="none" strokeLinecap="round" />
-          <path d={MAP_SHAPES.floodA} fill="#38BDF8" fillOpacity="0.1" stroke="#1E4E6B" strokeWidth="1.5" strokeDasharray="4 4" />
-        </Frame>
-        <Frame title="After" subtitle={e.postDate}>
-          <path d={MAP_SHAPES.river} stroke="#1E4E6B" strokeWidth="14" fill="none" strokeLinecap="round" />
-          <path d={MAP_SHAPES.floodA} fill="#38BDF8" fillOpacity="0.35" stroke="#38BDF8" strokeWidth="2" />
-          <path d={MAP_SHAPES.floodB} fill="#38BDF8" fillOpacity="0.3" stroke="#38BDF8" strokeWidth="2" />
-        </Frame>
-        <Frame title="Detected change" subtitle="new water ∖ permanent water">
-          <path d={MAP_SHAPES.floodA} fill="#2DD4BF" fillOpacity="0.35" stroke="#2DD4BF" strokeWidth="2" />
-          <path d={MAP_SHAPES.floodB} fill="#2DD4BF" fillOpacity="0.35" stroke="#2DD4BF" strokeWidth="2" />
-        </Frame>
+        <Frame title="Before" subtitle={e.preDate} layers={['base']} />
+        <Frame title="After" subtitle={e.postDate} layers={['base', 'flood']} />
+        <Frame title="Detected change" subtitle="new water ∖ permanent water" layers={['base', 'change']} />
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_320px]">
@@ -113,14 +103,14 @@ export default function ChangeDetection() {
   )
 }
 
-function Frame({ title, subtitle, children }) {
+function Frame({ title, subtitle, layers }) {
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between">
         <p className="text-[11px] font-medium uppercase tracking-wider text-muted">{title}</p>
         <p className="font-mono text-[10px] text-muted/70">{subtitle}</p>
       </div>
-      <MapPlaceholder height="h-48">{children}</MapPlaceholder>
+      <MapView layers={layers} height="h-48" scrollWheelZoom={false} zoomControl={false} />
     </div>
   )
 }

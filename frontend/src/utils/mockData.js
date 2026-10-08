@@ -180,21 +180,6 @@ export const RECENT_EVENTS = [
   { id: 'evt_demo_03', name: 'Urban overflow — Demo', severity: 'LOW', area: '2.4 km²', when: '2026-09-03' },
 ]
 
-/** Schematic map shapes (viewBox 0 0 800 450) — purely illustrative. */
-export const MAP_SHAPES = {
-  river:
-    'M -20 300 C 120 280, 200 340, 320 320 C 440 300, 520 360, 640 330 C 720 312, 780 340, 820 330',
-  floodA: 'M 180 210 C 250 175, 340 185, 400 230 C 455 272, 470 330, 420 355 C 355 388, 250 380, 200 340 C 155 305, 140 245, 180 210 Z',
-  floodB: 'M 470 120 C 530 100, 605 115, 630 160 C 652 200, 630 250, 580 262 C 525 275, 470 250, 455 205 C 443 168, 445 133, 470 120 Z',
-  zones: [
-    { id: 'z1', band: 'CRITICAL', d: 'M 200 230 C 250 210, 310 225, 330 265 C 348 302, 320 345, 270 350 C 218 355, 185 320, 188 280 C 190 254, 195 238, 200 230 Z' },
-    { id: 'z2', band: 'HIGH', d: 'M 350 245 C 400 230, 445 255, 450 300 C 455 340, 425 368, 380 365 C 335 362, 315 330, 320 295 C 324 268, 330 251, 350 245 Z' },
-    { id: 'z3', band: 'HIGH', d: 'M 480 140 C 530 125, 590 145, 605 185 C 618 222, 595 255, 550 262 C 505 268, 470 245, 462 205 C 456 175, 462 148, 480 140 Z' },
-    { id: 'z4', band: 'MEDIUM', d: 'M 620 260 C 670 250, 720 275, 725 315 C 730 355, 695 382, 655 378 C 615 374, 595 345, 600 310 C 604 285, 606 265, 620 260 Z' },
-    { id: 'z5', band: 'MEDIUM', d: 'M 90 120 C 140 108, 185 130, 190 170 C 195 208, 165 235, 125 232 C 85 229, 62 202, 66 168 C 70 140, 74 125, 90 120 Z' },
-  ],
-}
-
 export const REPORT = {
   source: 'template',
   model: null,
@@ -269,6 +254,110 @@ export const REPORT = {
   ],
   disclaimer:
     'AI-generated analysis for decision support only. Not an authoritative emergency instruction. Verify with official emergency services and ground assessment before acting.',
+}
+
+/** Mock vector overlays in WGS84 (lon/lat) for the demo AOI — schematic, fictional.
+ *  Geometry is illustrative only: real layers come from the backend in a later phase. */
+export const MOCK_GEO = {
+  center: [26.412, 86.2],
+  zoom: 12,
+  flood: {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: { id: 'floodA', kind: 'new-water' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[
+            [86.14, 26.402], [86.158, 26.378], [86.188, 26.37], [86.215, 26.382],
+            [86.23, 26.404], [86.222, 26.428], [86.196, 26.44], [86.166, 26.435],
+            [86.146, 26.42], [86.14, 26.402],
+          ]],
+        },
+      },
+      {
+        type: 'Feature',
+        properties: { id: 'floodB', kind: 'new-water' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[
+            [86.243, 26.448], [86.262, 26.428], [86.29, 26.424], [86.306, 26.44],
+            [86.304, 26.462], [86.28, 26.474], [86.252, 26.47], [86.238, 26.456],
+            [86.243, 26.448],
+          ]],
+        },
+      },
+    ],
+  },
+  zones: {
+    type: 'FeatureCollection',
+    features: [
+      zoneFeature('z1', [
+        [86.155, 26.39], [86.18, 26.382], [86.196, 26.398], [86.192, 26.418],
+        [86.17, 26.424], [86.152, 26.41], [86.155, 26.39],
+      ]),
+      zoneFeature('z2', [
+        [86.198, 26.394], [86.218, 26.388], [86.228, 26.406], [86.22, 26.424],
+        [86.2, 26.426], [86.194, 26.41], [86.198, 26.394],
+      ]),
+      zoneFeature('z3', [
+        [86.25, 26.44], [86.275, 26.43], [86.296, 26.442], [86.294, 26.462],
+        [86.268, 26.468], [86.248, 26.456], [86.25, 26.44],
+      ]),
+      zoneFeature('z4', [
+        [86.27, 26.372], [86.3, 26.364], [86.315, 26.384], [86.302, 26.404],
+        [86.276, 26.402], [86.264, 26.386], [86.27, 26.372],
+      ]),
+      zoneFeature('z5', [
+        [86.1, 26.448], [86.126, 26.438], [86.146, 26.45], [86.144, 26.472],
+        [86.118, 26.48], [86.096, 26.466], [86.1, 26.448],
+      ]),
+    ],
+  },
+  buildings: [
+    pointFeature('gb1', 86.16, 26.395),
+    pointFeature('gb2', 86.175, 26.41),
+    pointFeature('gb3', 86.19, 26.42),
+    pointFeature('gb4', 86.205, 26.4),
+    pointFeature('gb5', 86.215, 26.415),
+    pointFeature('gb6', 86.18, 26.385),
+    pointFeature('gb7', 86.255, 26.445),
+    pointFeature('gb8', 86.27, 26.455),
+    pointFeature('gb9', 86.285, 26.43),
+    pointFeature('gb10', 86.25, 26.46),
+    pointFeature('gb11', 86.17, 26.37),
+    pointFeature('gb12', 86.23, 26.392),
+  ],
+  critical: [
+    { ...pointFeature('c1', 86.168, 26.405), properties: { id: 'c1', name: 'District Hospital', type: 'hospital' } },
+    { ...pointFeature('c2', 86.196, 26.408), properties: { id: 'c2', name: 'PS Ward 4 (school)', type: 'school' } },
+    { ...pointFeature('c3', 86.212, 26.396), properties: { id: 'c3', name: 'Community Hall (shelter)', type: 'shelter' } },
+  ],
+  roads: {
+    type: 'FeatureCollection',
+    features: [
+      lineFeature('r1', [[86.12, 26.36], [86.16, 26.382], [86.205, 26.398], [86.25, 26.412], [86.3, 26.43]]),
+      lineFeature('r2', [[86.145, 26.455], [86.19, 26.43], [86.235, 26.408], [86.285, 26.386]]),
+      lineFeature('r3', [[86.1, 26.4], [86.155, 26.418], [86.21, 26.436], [86.265, 26.452], [86.32, 26.462]]),
+    ],
+  },
+}
+
+function zoneFeature(id, ring) {
+  return {
+    type: 'Feature',
+    properties: { id },
+    geometry: { type: 'Polygon', coordinates: [ring] },
+  }
+}
+
+function pointFeature(id, lon, lat) {
+  return { type: 'Feature', properties: { id }, geometry: { type: 'Point', coordinates: [lon, lat] } }
+}
+
+function lineFeature(id, coords) {
+  return { type: 'Feature', properties: { id }, geometry: { type: 'LineString', coordinates: coords } }
 }
 
 export const PROVENANCE_META = {

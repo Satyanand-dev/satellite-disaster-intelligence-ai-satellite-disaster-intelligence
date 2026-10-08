@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import DataConfidence from '../components/data/DataConfidence.jsx'
-import MapPlaceholder from '../components/map/MapPlaceholder.jsx'
+import MapView from '../components/map/MapView.jsx'
 import Drawer from '../components/ui/Drawer.jsx'
 import SeverityBadge from '../components/ui/SeverityBadge.jsx'
-import { MAP_SHAPES, RISK, RISK_ZONES } from '../utils/mockData.js'
+import { RISK, RISK_ZONES } from '../utils/mockData.js'
 
 const LAYERS = [
   { id: 'base', label: 'Base map', locked: true },
@@ -18,16 +18,6 @@ const LAYERS = [
 ]
 
 const COLORS = { CRITICAL: '#EF4444', HIGH: '#F97316', MEDIUM: '#EAB308', LOW: '#22C55E' }
-
-const BUILDING_PINS = [
-  [150, 140], [210, 300], [330, 260], [420, 210], [500, 180], [560, 240],
-  [620, 300], [680, 330], [250, 350], [380, 330], [470, 320], [600, 150],
-]
-const CRITICAL_PINS = [
-  { x: 300, y: 280, type: 'hospital' },
-  { x: 520, y: 200, type: 'school' },
-  { x: 180, y: 170, type: 'shelter' },
-]
 
 export default function RiskMap() {
   const { eventId } = useParams()
@@ -118,62 +108,13 @@ export default function RiskMap() {
 
         {/* map */}
         <div>
-          <MapPlaceholder label="click a zone for details" height="h-[70vh]">
-            {/* satellite mock texture */}
-            {active.has('satellite') && (
-              <rect x="0" y="0" width="800" height="450" fill="#1a2b1f" fillOpacity="0.5" />
-            )}
-            {active.has('base') && (
-              <path d={MAP_SHAPES.river} stroke="#1E4E6B" strokeWidth="14" fill="none" strokeLinecap="round" />
-            )}
-            {active.has('flood') && (
-              <>
-                <path d={MAP_SHAPES.floodA} fill="#38BDF8" fillOpacity="0.22" stroke="#38BDF8" strokeWidth="2" />
-                <path d={MAP_SHAPES.floodB} fill="#38BDF8" fillOpacity="0.22" stroke="#38BDF8" strokeWidth="2" />
-              </>
-            )}
-            {active.has('change') && (
-              <path d={MAP_SHAPES.floodA} fill="#2DD4BF" fillOpacity="0.15" stroke="#2DD4BF" strokeWidth="4" strokeDasharray="8 5" />
-            )}
-            {active.has('roads') && (
-              <g stroke="#E6EDF7" strokeOpacity="0.5" strokeWidth="2" fill="none">
-                <path d="M 60 400 L 300 300 L 520 320 L 760 250" />
-                <path d="M 120 60 L 260 200 L 470 150 L 700 90" />
-                <path d="M 400 430 L 380 250 L 430 90" />
-              </g>
-            )}
-            {active.has('buildings') &&
-              BUILDING_PINS.map(([x, y], i) => (
-                <rect key={i} x={x} y={y} width="8" height="8" fill="#8FA3C0" fillOpacity="0.9" />
-              ))}
-            {active.has('critical') &&
-              CRITICAL_PINS.map((p, i) => (
-                <g key={i} transform={`translate(${p.x} ${p.y})`}>
-                  <circle r="7" fill="#0B1220" stroke="#2DD4BF" strokeWidth="2.5" />
-                  <circle r="2.2" fill="#2DD4BF" />
-                </g>
-              ))}
-            {active.has('risk') &&
-              RISK_ZONES.map((z) => {
-                const shape = MAP_SHAPES.zones.find((s) => s.id === z.id)
-                if (!shape) return null
-                const isSel = selected?.id === z.id
-                return (
-                  <path
-                    key={z.id}
-                    d={shape.d}
-                    fill={COLORS[z.band]}
-                    fillOpacity={isSel ? 0.4 : 0.18}
-                    stroke={COLORS[z.band]}
-                    strokeWidth={isSel ? 4 : 2}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setSelected(z)}
-                  >
-                    <title>{`${z.id} — ${z.band} (${z.score})`}</title>
-                  </path>
-                )
-              })}
-          </MapPlaceholder>
+          <MapView
+            layers={[...active]}
+            height="h-[70vh]"
+            label="click a zone for details"
+            onZoneClick={(id) => setSelected(RISK_ZONES.find((z) => z.id === id) ?? null)}
+            selectedZoneId={selected?.id}
+          />
 
           <p className="mt-2 text-[11px] text-muted">
             Click a risk zone polygon to inspect its score breakdown.

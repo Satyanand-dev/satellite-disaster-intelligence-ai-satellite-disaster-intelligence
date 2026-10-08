@@ -1,10 +1,10 @@
 import { Link, useParams } from 'react-router-dom'
 import DataConfidence from '../components/data/DataConfidence.jsx'
-import MapPlaceholder from '../components/map/MapPlaceholder.jsx'
+import MapView from '../components/map/MapView.jsx'
 import Alert from '../components/ui/Alert.jsx'
 import Button from '../components/ui/Button.jsx'
 import SeverityBadge from '../components/ui/SeverityBadge.jsx'
-import { DEMO_EVENT, MAP_SHAPES } from '../utils/mockData.js'
+import { DEMO_EVENT } from '../utils/mockData.js'
 
 export default function Analysis() {
   const { eventId } = useParams()
@@ -37,11 +37,7 @@ export default function Analysis() {
               {d.tiles} tiles · {d.inferenceMs} ms
             </span>
           </div>
-          <MapPlaceholder label="post-event classification" height="h-[52vh]">
-            <path d={MAP_SHAPES.river} stroke="#1E4E6B" strokeWidth="14" fill="none" strokeLinecap="round" />
-            <path d={MAP_SHAPES.floodA} fill="#38BDF8" fillOpacity="0.35" stroke="#38BDF8" strokeWidth="2" />
-            <path d={MAP_SHAPES.floodB} fill="#38BDF8" fillOpacity="0.35" stroke="#38BDF8" strokeWidth="2" />
-          </MapPlaceholder>
+          <MapView layers={['base', 'flood']} height="h-[52vh]" label="post-event classification" />
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <Figure label="Pre-event water" value="18.4 km²" />

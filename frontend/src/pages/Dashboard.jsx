@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { Button, SeverityBadge, StatCard } from '../components/ui/index.js'
 import Chart from '../components/data/Chart.jsx'
-import MapPlaceholder from '../components/map/MapPlaceholder.jsx'
+import MapView from '../components/map/MapView.jsx'
+import { toast } from '../components/ui/toast.js'
 import { useEventStore } from '../store/eventStore.js'
-import { DEMO_EVENT, MAP_SHAPES, RECENT_EVENTS, RISK } from '../utils/mockData.js'
+import { DEMO_EVENT, RECENT_EVENTS, RISK } from '../utils/mockData.js'
 import { riskBand } from '../utils/severity.js'
 
 export default function Dashboard() {
@@ -61,35 +62,18 @@ export default function Dashboard() {
 
       <div className="grid gap-4 xl:grid-cols-[1fr_320px]">
         <div>
-          <MapPlaceholder label="flood extent + risk zones" height="h-[58vh]">
-            <path
-              d={MAP_SHAPES.river}
-              stroke="#1E4E6B"
-              strokeWidth="14"
-              fill="none"
-              strokeLinecap="round"
-              opacity="0.9"
-            />
-            <path d={MAP_SHAPES.floodA} fill="#38BDF8" fillOpacity="0.22" stroke="#38BDF8" strokeWidth="2" />
-            <path d={MAP_SHAPES.floodB} fill="#38BDF8" fillOpacity="0.22" stroke="#38BDF8" strokeWidth="2" />
-            {MAP_SHAPES.zones.map((z) => (
-              <path
-                key={z.id}
-                d={z.d}
-                fillOpacity="0.18"
-                strokeWidth="2"
-                fill={zoneColor(z.band)}
-                stroke={zoneColor(z.band)}
-              />
-            ))}
-          </MapPlaceholder>
+          <MapView
+            layers={['base', 'flood', 'risk']}
+            height="h-[58vh]"
+            label="flood extent + risk zones"
+            onZoneClick={(id) => toast(`Zone ${id} — open Risk Map for the score breakdown`)}
+          />
 
           <div className="mt-3 flex flex-wrap items-center gap-4 text-[11px] text-muted">
             <LegendDot color="#38BDF8" label="Flood extent" />
             <LegendDot color="#EF4444" label="CRITICAL" />
             <LegendDot color="#F97316" label="HIGH" />
             <LegendDot color="#EAB308" label="MEDIUM" />
-            <LegendDot color="#1E4E6B" label="River (baseline)" />
           </div>
         </div>
 
@@ -149,10 +133,6 @@ export default function Dashboard() {
       </div>
     </div>
   )
-}
-
-function zoneColor(band) {
-  return { CRITICAL: '#EF4444', HIGH: '#F97316', MEDIUM: '#EAB308', LOW: '#22C55E' }[band] ?? '#38BDF8'
 }
 
 function LegendDot({ color, label }) {
