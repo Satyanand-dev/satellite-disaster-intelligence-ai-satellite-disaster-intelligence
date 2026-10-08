@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   Design tokens — plan.md §F
+   Tailwind v4 uses CSS-first config: @theme exposes each token
+   as a utility (e.g. --color-panel → bg-panel, text-panel).
+   ============================================================ */
+@theme {
+  /* surfaces */
+  --color-bg: #0b1220;
+  --color-panel: #111a2c;
+  --color-panel2: #16213a;
+  --color-border: #1e2a44;
+
+  /* text */
+  --color-text: #e6edf7;
+  --color-muted: #8fa3c0;
+
+  /* brand */
+  --color-accent: #38bdf8;
+  --color-accent2: #2dd4bf;
+
+  /* severity — used identically everywhere (badges, map, legend, tables) */
+  --color-low: #22c55e;
+  --color-medium: #eab308;
+  --color-high: #f97316;
+  --color-critical: #ef4444;
+
+  /* typography */
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+}
+
+/* base */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-bg text-text antialiased;
+  }
+}
